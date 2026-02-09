@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Models;
 using Backend.Data.Configurations;
+using Backend.Data.Seeders;
 
 namespace Backend.Data;
 
@@ -26,5 +27,9 @@ public class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new BookingConfiguration());
         modelBuilder.ApplyConfiguration(new BookingStatusConfiguration());
         modelBuilder.ApplyConfiguration(new BookingHistoryConfiguration());
+
+        // Apply seed data
+        RoomSeeder.Seed(modelBuilder);
+        BookingStatusSeeder.Seed(modelBuilder);
     }
 }

@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Models;
+using Backend.Data.Configurations;
 
 namespace Backend.Data;
+
 public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
@@ -19,24 +21,10 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Konfigurasi relasi BookingHistory dengan BookingStatus untuk OldStatus dan NewStatus
-        modelBuilder.Entity<BookingHistory>()
-            .HasOne(bh => bh.OldStatusNavigation)
-            .WithMany(bs => bs.BookingHistoriesAsOldStatus)
-            .HasForeignKey(bh => bh.OldStatus)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<BookingHistory>()
-            .HasOne(bh => bh.NewStatusNavigation)
-            .WithMany(bs => bs.BookingHistoriesAsNewStatus)
-            .HasForeignKey(bh => bh.NewStatus)
-            .OnDelete(DeleteBehavior.Restrict);
-
-        // Konfigurasi relasi User dengan BookingHistory
-        modelBuilder.Entity<BookingHistory>()
-            .HasOne(bh => bh.ChangedByNavigation)
-            .WithMany(u => u.BookingHistories)
-            .HasForeignKey(bh => bh.ChangedBy)
-            .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new RoomConfiguration());
+        modelBuilder.ApplyConfiguration(new BookingConfiguration());
+        modelBuilder.ApplyConfiguration(new BookingStatusConfiguration());
+        modelBuilder.ApplyConfiguration(new BookingHistoryConfiguration());
     }
 }

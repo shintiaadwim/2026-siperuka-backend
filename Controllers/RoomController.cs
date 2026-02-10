@@ -21,6 +21,7 @@ public class RoomController : ControllerBase
     public async Task<ActionResult<IEnumerable<RoomReadDto>>> GetRooms()
     {
         var data = await _context.Rooms
+            .Where(r => r.DeletedAt == null)
             .OrderByDescending(r => r.CreatedAt)
             .Select(r => new RoomReadDto
             {
@@ -39,7 +40,9 @@ public class RoomController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<RoomReadDto>> GetRoom(int id)
     {
-        var room = await _context.Rooms.FindAsync(id);
+        var room = await _context.Rooms
+            .Where(r => r.Id == id && r.DeletedAt == null)
+            .FirstOrDefaultAsync();
 
         if (room == null)
         {
@@ -63,6 +66,13 @@ public class RoomController : ControllerBase
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
+        }
+
+        // Validasi unique RoomCode
+        var existingRoom = await _context.Rooms.AnyAsync(r => r.RoomCode == dto.RoomCode && r.DeletedAt == null);
+        if (existingRoom)
+        {
+            return BadRequest(new { message = "Kode ruangan sudah digunakan" });
         }
 
         var room = new Room
@@ -96,7 +106,10 @@ public class RoomController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var room = await _context.Rooms.FindAsync(id);
+        var room = await _context.Rooms
+            .Where(r => r.Id == id && r.DeletedAt == null)
+            .FirstOrDefaultAsync();
+
         if (room == null)
         {
             return NotFound(new { message = "Data ruangan tidak ditemukan" });
@@ -115,14 +128,17 @@ public class RoomController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteRoom(int id)
     {
-        var room = await _context.Rooms.FindAsync(id);
+        var room = await _context.Rooms
+            .Where(r => r.Id == id && r.DeletedAt == null)
+            .FirstOrDefaultAsync();
 
         if (room == null)
         {
             return NotFound(new { message = "Data ruangan tidak ditemukan" });
         }
 
-        _context.Rooms.Remove(room);
+        // Soft delete
+        room.DeletedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
 
         return Ok(new { message = "Data ruangan berhasil dihapus" });

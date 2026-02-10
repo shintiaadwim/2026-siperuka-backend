@@ -5,6 +5,7 @@ public class BookingStatus
 {
     public int Id { get; set; }
     public string StatusBooking { get; set; } = string.Empty;
+    public string StatusName { get; set; } = string.Empty;
 
     // Navigation properties
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();

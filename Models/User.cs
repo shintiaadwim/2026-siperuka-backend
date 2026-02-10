@@ -13,6 +13,7 @@ public class User
     // Audit Fields
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? DeletedAt { get; set; }
 
     // Navigation properties
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();

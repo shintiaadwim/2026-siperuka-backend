@@ -4,6 +4,7 @@ using Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260209051904_UpdateBookingModels")]
+    partial class UpdateBookingModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,28 +133,6 @@ namespace Backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BookingStatuses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            StatusBooking = "Pending"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            StatusBooking = "Approved"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            StatusBooking = "Rejected"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            StatusBooking = "Cancelled"
-                        });
                 });
 
             modelBuilder.Entity("Backend.Models.Room", b =>
@@ -194,96 +175,6 @@ namespace Backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Rooms");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Capacity = 60,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Location = "Gedung D4 Lantai 3",
-                            RoomCode = "A3",
-                            RoomName = "Ruang Kuliah A 301",
-                            RoomStatus = "Available",
-                            UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Capacity = 45,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Location = "Gedung D4 Lantai 2",
-                            RoomCode = "B2",
-                            RoomName = "Ruang Kuliah B 202",
-                            RoomStatus = "Available",
-                            UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Capacity = 100,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Location = "Gedung Pascasarjana Lantai 6",
-                            RoomCode = "Aula-Mini",
-                            RoomName = "Mini Theater",
-                            RoomStatus = "Available",
-                            UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Capacity = 30,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Location = "Gedung D4 Lantai 1",
-                            RoomCode = "LAB-C3",
-                            RoomName = "Lab Komputer Jaringan C 307",
-                            RoomStatus = "Available",
-                            UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Capacity = 30,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Location = "Gedung D4 Lantai 2",
-                            RoomCode = "LAB-C2",
-                            RoomName = "Lab APD C 205",
-                            RoomStatus = "Maintenance",
-                            UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Capacity = 500,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Location = "Gedung Pascasarjana Lantai 6",
-                            RoomCode = "Aula-Utama",
-                            RoomName = "AUDITORIUM",
-                            RoomStatus = "Available",
-                            UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Capacity = 15,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Location = "Gedung SAW Lantai 6",
-                            RoomCode = "SAW",
-                            RoomName = "Ruang Kelas SAW-06.07",
-                            RoomStatus = "Available",
-                            UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Capacity = 50,
-                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Location = "Gedung Pascasarjana Lantai 5",
-                            RoomCode = "PS",
-                            RoomName = "Ruang Kelas PS-05.12",
-                            RoomStatus = "Available",
-                            UpdatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc)
-                        });
                 });
 
             modelBuilder.Entity("Backend.Models.User", b =>

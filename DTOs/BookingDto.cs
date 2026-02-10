@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Backend.Converters;
 using Backend.Data;
 using System.Collections.Generic;
 
@@ -20,9 +22,11 @@ public class BookingCreateDto : IValidatableObject
     public DateTime Date { get; set; }
 
     [Required]
+    [JsonConverter(typeof(TimeSpanConverter))]
     public TimeSpan StartTime { get; set; }
 
     [Required]
+    [JsonConverter(typeof(TimeSpanConverter))]
     public TimeSpan EndTime { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -61,7 +65,9 @@ public class BookingReadDto
     public int UserId { get; set; }
     public int StatusId { get; set; }
     public DateTime Date { get; set; }
+    [JsonConverter(typeof(TimeSpanConverter))]
     public TimeSpan StartTime { get; set; }
+    [JsonConverter(typeof(TimeSpanConverter))]
     public TimeSpan EndTime { get; set; }
     public string Purpose { get; set; } = string.Empty;
 }
@@ -71,8 +77,10 @@ public class BookingUpdateDto : IValidatableObject
     [Required]
     public DateTime Date { get; set; }
     [Required]
+    [JsonConverter(typeof(TimeSpanConverter))]
     public TimeSpan StartTime { get; set; }
     [Required]
+    [JsonConverter(typeof(TimeSpanConverter))]
     public TimeSpan EndTime { get; set; }
     [Required]
     [MaxLength(255)]

@@ -107,6 +107,16 @@ public class BookingController : ControllerBase
         _context.Bookings.Add(booking);
         await _context.SaveChangesAsync();
 
+        _context.BookingHistories.Add(new BookingHistory
+        {
+            BookingId = booking.Id,
+            OldStatus = booking.StatusId,
+            NewStatus = booking.StatusId,
+            ChangedBy = booking.UserId,
+            Note = "Created booking"
+        });
+        await _context.SaveChangesAsync();
+
         return CreatedAtAction(nameof(GetById), new { id = booking.Id }, new BookingReadDto
         {
             Id = booking.Id,
@@ -144,12 +154,24 @@ public class BookingController : ControllerBase
             return BadRequest(new { message = "Status tidak ditemukan" });
         }
 
+        var oldStatusId = booking.StatusId;
+
         booking.Date = dto.Date;
         booking.StartTime = dto.StartTime;
         booking.EndTime = dto.EndTime;
         booking.Purpose = dto.Purpose;
         booking.StatusId = dto.StatusId;
 
+        await _context.SaveChangesAsync();
+
+        _context.BookingHistories.Add(new BookingHistory
+        {
+            BookingId = booking.Id,
+            OldStatus = oldStatusId,
+            NewStatus = booking.StatusId,
+            ChangedBy = booking.UserId,
+            Note = "Updated booking"
+        });
         await _context.SaveChangesAsync();
 
         return NoContent();
@@ -169,6 +191,16 @@ public class BookingController : ControllerBase
 
         // Soft delete
         booking.DeletedAt = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
+
+        _context.BookingHistories.Add(new BookingHistory
+        {
+            BookingId = booking.Id,
+            OldStatus = booking.StatusId,
+            NewStatus = booking.StatusId,
+            ChangedBy = booking.UserId,
+            Note = "Deleted booking"
+        });
         await _context.SaveChangesAsync();
 
         return Ok(new { message = "Data peminjaman berhasil dihapus" });

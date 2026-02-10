@@ -11,22 +11,26 @@ public static class BookingStatusSeeder
             new BookingStatus
             {
                 Id = 1,
-                StatusBooking = "Pending"
+                StatusBooking = "Pending",
+                StatusName = "Pending"
             },
             new BookingStatus
             {
                 Id = 2,
-                StatusBooking = "Approved"
+                StatusBooking = "Approved",
+                StatusName = "Approved"
             },
             new BookingStatus
             {
                 Id = 3,
-                StatusBooking = "Rejected"
+                StatusBooking = "Rejected",
+                StatusName = "Rejected"
             },
             new BookingStatus
             {
                 Id = 4,
-                StatusBooking = "Cancelled"
+                StatusBooking = "Cancelled",
+                StatusName = "Cancelled"
             }
         );
     }

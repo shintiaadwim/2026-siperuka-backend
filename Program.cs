@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Backend.Data;
+using Backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration["DB_CONNECTION"]
     )
 );
+
+// Register services
+builder.Services.AddScoped<IBookingService, BookingService>();
 
 var app = builder.Build();
 

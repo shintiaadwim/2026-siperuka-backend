@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\SHINTIA\\Documents\\siperuka-2026\\Backend\\Backend.csproj": {}
+    "C:\\Users\\SHINTIA\\Documents\\siperuka-2026\\backend\\Backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\SHINTIA\\Documents\\siperuka-2026\\Backend\\Backend.csproj": {
+    "C:\\Users\\SHINTIA\\Documents\\siperuka-2026\\backend\\Backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\SHINTIA\\Documents\\siperuka-2026\\Backend\\Backend.csproj",
+        "projectUniqueName": "C:\\Users\\SHINTIA\\Documents\\siperuka-2026\\backend\\Backend.csproj",
         "projectName": "Backend",
-        "projectPath": "C:\\Users\\SHINTIA\\Documents\\siperuka-2026\\Backend\\Backend.csproj",
+        "projectPath": "C:\\Users\\SHINTIA\\Documents\\siperuka-2026\\backend\\Backend.csproj",
         "packagesPath": "C:\\Users\\SHINTIA\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\SHINTIA\\Documents\\siperuka-2026\\Backend\\obj\\",
+        "outputPath": "C:\\Users\\SHINTIA\\Documents\\siperuka-2026\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\SHINTIA\\AppData\\Roaming\\NuGet\\NuGet.Config"

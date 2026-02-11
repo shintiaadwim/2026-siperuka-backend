@@ -70,6 +70,7 @@ public class BookingReadDto
     [JsonConverter(typeof(TimeSpanConverter))]
     public TimeSpan EndTime { get; set; }
     public string Purpose { get; set; } = string.Empty;
+    public RoomReadDto? Room { get; set; }
 }
 
 public class BookingUpdateDto : IValidatableObject

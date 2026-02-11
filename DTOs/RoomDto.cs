@@ -51,3 +51,14 @@ public class RoomUpdateDto
     [MaxLength(50)]
     public string RoomStatus { get; set; } = string.Empty;
 }
+
+public class RoomAvailabilityDto
+{
+    public int Id { get; set; }
+    public string RoomCode { get; set; } = string.Empty;
+    public string RoomName { get; set; } = string.Empty;
+    public int Capacity { get; set; }
+    public string Location { get; set; } = string.Empty;
+    public string RoomStatus { get; set; } = string.Empty;
+    public bool IsAvailable { get; set; }
+}

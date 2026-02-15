@@ -71,6 +71,8 @@ public class BookingReadDto
     public TimeSpan EndTime { get; set; }
     public string Purpose { get; set; } = string.Empty;
     public RoomReadDto? Room { get; set; }
+    public BookingStatusDto? Status { get; set; }
+    public UserReadDto? User { get; set; } // Tambahan agar relasi user muncul di response
 }
 
 public class BookingUpdateDto : IValidatableObject

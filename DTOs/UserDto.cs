@@ -36,3 +36,11 @@ public class UserUpdateDto
     [MaxLength(20)]
     public string Role { get; set; } = "USER";
 }
+
+public class UserListResponse
+{
+    public int Total { get; set; }
+    public int Page { get; set; }
+    public int PageSize { get; set; }
+    public List<UserReadDto> Data { get; set; } = new List<UserReadDto>();
+}

@@ -20,6 +20,9 @@ public class BookingController : ControllerBase
         _bookingService = bookingService;
     }
 
+
+    #region Booking Endpoints
+
     [HttpGet]
     public async Task<ActionResult<IEnumerable<BookingReadDto>>> GetAll()
     {
@@ -162,6 +165,7 @@ public class BookingController : ControllerBase
         return Ok(new { message = "Data peminjaman berhasil dihapus" });
     }
 
+
     [HttpPut("{id}/status")]
     public async Task<IActionResult> UpdateStatus(int id, BookingStatusUpdateDto dto)
     {
@@ -184,7 +188,10 @@ public class BookingController : ControllerBase
         return Ok(new { message = "Status peminjaman berhasil diperbarui" });
     }
 
-    #region Room Management
+    #endregion
+
+
+    #region Room Endpoints
 
     [HttpGet("rooms")]
     public async Task<ActionResult<IEnumerable<RoomReadDto>>> GetRooms()

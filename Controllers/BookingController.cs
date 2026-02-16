@@ -23,10 +23,60 @@ public class BookingController : ControllerBase
     #region Booking Management
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<BookingReadDto>>> GetAll()
+    public async Task<IActionResult> GetPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var data = await _bookingService.GetAllBookingsAsync();
-        return Ok(data);
+        var query = _context.Bookings
+            .Include(b => b.Status)
+            .Include(b => b.User)
+            .Include(b => b.Room)
+            .Where(b => b.DeletedAt == null)
+            .OrderByDescending(b => b.Date);
+
+        var total = await query.CountAsync();
+        var data = await query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(b => new BookingReadDto
+            {
+                Id = b.Id,
+                RoomId = b.RoomId,
+                UserId = b.UserId,
+                StatusId = b.StatusId,
+                Date = b.Date,
+                StartTime = b.StartTime,
+                EndTime = b.EndTime,
+                Purpose = b.Purpose,
+                Room = new RoomReadDto
+                {
+                    Id = b.Room.Id,
+                    RoomCode = b.Room.RoomCode,
+                    RoomName = b.Room.RoomName,
+                    Capacity = b.Room.Capacity,
+                    Location = b.Room.Location,
+                    RoomStatus = b.Room.RoomStatus
+                },
+                Status = b.Status == null ? null : new BookingStatusDto
+                {
+                    Id = b.Status.Id,
+                    StatusBooking = b.Status.StatusBooking,
+                    StatusName = b.Status.StatusName
+                },
+                User = b.User == null ? null : new UserReadDto
+                {
+                    Id = b.User.Id,
+                    Name = b.User.Name,
+                    Email = b.User.Email
+                }
+            })
+            .ToListAsync();
+
+        return Ok(new
+        {
+            data,
+            total,
+            page,
+            pageSize
+        });
     }
 
     [HttpGet("{id}")]

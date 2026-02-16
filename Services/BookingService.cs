@@ -17,8 +17,10 @@ public class BookingService : IBookingService
     public async Task<IEnumerable<BookingReadDto>> GetAllBookingsAsync()
     {
         return await _context.Bookings
+            .Include(b => b.Status)
+            .Include(b => b.User)
             .Where(b => b.DeletedAt == null)
-            .OrderByDescending(p => p.CreatedAt)
+            .OrderBy(p => p.Id)
             .Select(b => new BookingReadDto
             {
                 Id = b.Id,
@@ -37,6 +39,18 @@ public class BookingService : IBookingService
                     Capacity = b.Room.Capacity,
                     Location = b.Room.Location,
                     RoomStatus = b.Room.RoomStatus
+                },
+                Status = b.Status == null ? null : new BookingStatusDto
+                {
+                    Id = b.Status.Id,
+                    StatusBooking = b.Status.StatusBooking,
+                    StatusName = b.Status.StatusName
+                },
+                User = b.User == null ? null : new UserReadDto
+                {
+                    Id = b.User.Id,
+                    Name = b.User.Name,
+                    Email = b.User.Email
                 }
             })
             .ToListAsync();
@@ -78,7 +92,7 @@ public class BookingService : IBookingService
     {
         return await _context.Bookings
             .Where(b => b.DeletedAt == null && b.Date >= startDate && b.Date <= endDate)
-            .OrderByDescending(p => p.CreatedAt)
+            .OrderBy(p => p.Id)
             .Select(b => new BookingReadDto
             {
                 Id = b.Id,
@@ -106,7 +120,7 @@ public class BookingService : IBookingService
     {
         return await _context.Bookings
             .Where(b => b.DeletedAt == null && b.StatusId == statusId)
-            .OrderByDescending(p => p.CreatedAt)
+            .OrderBy(p => p.Id)
             .Select(b => new BookingReadDto
             {
                 Id = b.Id,
@@ -134,7 +148,7 @@ public class BookingService : IBookingService
     {
         return await _context.Bookings
             .Where(b => b.DeletedAt == null && b.UserId == userId)
-            .OrderByDescending(p => p.CreatedAt)
+            .OrderBy(p => p.Id)
             .Select(b => new BookingReadDto
             {
                 Id = b.Id,
@@ -161,6 +175,9 @@ public class BookingService : IBookingService
     public async Task<IEnumerable<BookingReadDto>> GetBookingsByRoomAsync(int roomId)
     {
         return await _context.Bookings
+            .Include(b => b.Status)
+            .Include(b => b.User)
+            .Include(b => b.Room)
             .Where(b => b.DeletedAt == null && b.RoomId == roomId)
             .OrderByDescending(p => p.CreatedAt)
             .Select(b => new BookingReadDto
@@ -181,6 +198,18 @@ public class BookingService : IBookingService
                     Capacity = b.Room.Capacity,
                     Location = b.Room.Location,
                     RoomStatus = b.Room.RoomStatus
+                },
+                Status = b.Status == null ? null : new BookingStatusDto
+                {
+                    Id = b.Status.Id,
+                    StatusBooking = b.Status.StatusBooking,
+                    StatusName = b.Status.StatusName
+                },
+                User = b.User == null ? null : new UserReadDto
+                {
+                    Id = b.User.Id,
+                    Name = b.User.Name,
+                    Email = b.User.Email
                 }
             })
             .ToListAsync();
@@ -309,6 +338,11 @@ public class BookingService : IBookingService
             return (false, "Status tidak ditemukan");
         }
 
+        // Simpan nilai lama untuk history
+        var oldDate = booking.Date;
+        var oldStartTime = booking.StartTime;
+        var oldEndTime = booking.EndTime;
+        var oldPurpose = booking.Purpose;
         var oldStatusId = booking.StatusId;
 
         booking.Date = dto.Date;
@@ -319,14 +353,87 @@ public class BookingService : IBookingService
 
         await _context.SaveChangesAsync();
 
-        _context.BookingHistories.Add(new BookingHistory
+        // Catat setiap perubahan field di BookingHistory
+        if (oldDate != dto.Date)
         {
-            BookingId = booking.Id,
-            OldStatus = oldStatusId,
-            NewStatus = booking.StatusId,
-            ChangedBy = booking.UserId,
-            Note = "Updated booking"
-        });
+            _context.BookingHistories.Add(new BookingHistory
+            {
+                BookingId = booking.Id,
+                OldStatus = oldStatusId,
+                NewStatus = booking.StatusId,
+                ChangedField = "Date",
+                OldValue = oldDate.ToString("yyyy-MM-dd"),
+                NewValue = dto.Date.ToString("yyyy-MM-dd"),
+                EntityType = "Booking",
+                ChangedBy = booking.UserId,
+                Note = "Tanggal booking diubah"
+            });
+        }
+
+        if (oldStartTime != dto.StartTime)
+        {
+            _context.BookingHistories.Add(new BookingHistory
+            {
+                BookingId = booking.Id,
+                OldStatus = oldStatusId,
+                NewStatus = booking.StatusId,
+                ChangedField = "StartTime",
+                OldValue = oldStartTime.ToString(),
+                NewValue = dto.StartTime.ToString(),
+                EntityType = "Booking",
+                ChangedBy = booking.UserId,
+                Note = "Waktu mulai diubah"
+            });
+        }
+
+        if (oldEndTime != dto.EndTime)
+        {
+            _context.BookingHistories.Add(new BookingHistory
+            {
+                BookingId = booking.Id,
+                OldStatus = oldStatusId,
+                NewStatus = booking.StatusId,
+                ChangedField = "EndTime",
+                OldValue = oldEndTime.ToString(),
+                NewValue = dto.EndTime.ToString(),
+                EntityType = "Booking",
+                ChangedBy = booking.UserId,
+                Note = "Waktu selesai diubah"
+            });
+        }
+
+        if (oldPurpose != dto.Purpose)
+        {
+            _context.BookingHistories.Add(new BookingHistory
+            {
+                BookingId = booking.Id,
+                OldStatus = oldStatusId,
+                NewStatus = booking.StatusId,
+                ChangedField = "Purpose",
+                OldValue = oldPurpose,
+                NewValue = dto.Purpose,
+                EntityType = "Booking",
+                ChangedBy = booking.UserId,
+                Note = "Tujuan booking diubah"
+            });
+        }
+
+        if (oldStatusId != dto.StatusId)
+        {
+            _context.BookingHistories.Add(new BookingHistory
+            {
+                BookingId = booking.Id,
+                OldStatus = oldStatusId,
+                NewStatus = booking.StatusId,
+                ChangedField = "Status",
+                OldValue = oldStatusId.ToString(),
+                NewValue = dto.StatusId.ToString(),
+                EntityType = "Booking",
+                ChangedBy = booking.UserId,
+                Note = "Status booking diubah"
+            });
+        }
+
         await _context.SaveChangesAsync();
 
         return (true, null);
@@ -395,6 +502,10 @@ public class BookingService : IBookingService
             BookingId = booking.Id,
             OldStatus = oldStatusId,
             NewStatus = booking.StatusId,
+            ChangedField = "Status",
+            OldValue = oldStatusId.ToString(),
+            NewValue = dto.NewStatusId.ToString(),
+            EntityType = "Booking",
             ChangedBy = booking.UserId,
             Note = dto.Note
         });

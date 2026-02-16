@@ -20,6 +20,7 @@ public class BookingController : ControllerBase
         _bookingService = bookingService;
     }
 
+    #region Booking Endpoints
     #region Booking Management
 
     [HttpGet]
@@ -224,6 +225,7 @@ public class BookingController : ControllerBase
         return Ok(new { message = "Data peminjaman berhasil dihapus" });
     }
 
+
     [HttpPut("{id}/status")]
     public async Task<IActionResult> UpdateStatus(int id, BookingStatusUpdateDto dto)
     {
@@ -247,9 +249,8 @@ public class BookingController : ControllerBase
     }
 
     #endregion
-
+    #region Room Endpoints
     #region Room Management
-
 
     [HttpGet("history")]
     public async Task<ActionResult<dynamic>> GetBookingHistory([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
